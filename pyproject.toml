@@ -1,0 +1,38 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "idp2aws"
+version = "0.2.0"
+description = "Get short-lived AWS keys by signing in to your IdP in a browser"
+readme = "README.md"
+license = "LicenseRef-MIT-Commons-Clause"
+license-files = ["LICENSE"]
+authors = [{ name = "Saimon" }]
+requires-python = ">=3.12"
+dependencies = [
+    "typer>=0.12",
+    "boto3>=1.34",
+    "playwright>=1.44",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "pytest-mock>=3", "pylint>=3"]
+
+[project.scripts]
+idp2aws = "idp2aws.cli:app"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/idp2aws"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-m 'not browser'"
+markers = ["browser: starts a real browser (run with: pytest -m browser)"]
+
+[tool.pylint.format]
+max-line-length = 89
+
+[tool.pylint."messages control"]
+disable = ["too-few-public-methods"]
