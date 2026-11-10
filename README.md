@@ -64,6 +64,8 @@ pytest -m browser      # browser tests: headless Chrome with a fake IdP and AWS 
 pylint src scripts
 ```
 
+The `CI` workflow runs the same checks on each pull request, and also builds the packages.
+
 ## Release
 
 idp2aws uses semantic versioning: `MAJOR.MINOR.PATCH`. Each release must be the next patch,
