@@ -21,75 +21,82 @@ problems.
 
 ## Install
 
+You can install idp2aws in two ways:
+
+- From PyPI, with [pipx](https://pipx.pypa.io) or pip. The steps for each operating system
+  follow. pipx puts the `idp2aws` command on your `PATH` and keeps its libraries apart from your
+  other Python tools. `pip install idp2aws` also works, but then you manage the virtual
+  environment.
+- From source, to get the latest code on `main` or to change the code. See
+  [Install from source](#install-from-source).
+
 ### macOS
 
-1. Install Python 3.12, if you do not have 3.12 or newer:
+1. Install Python 3.12 and pipx:
 
    ```sh
-   brew install python@3.12
+   brew install python@3.12 pipx
+   pipx ensurepath
    ```
 
-2. Install idp2aws:
+2. Open a new terminal, then install idp2aws:
 
    ```sh
-   git clone https://github.com/saimoncse19/idp2aws.git && cd idp2aws
-   python3.12 -m venv .venv
-   .venv/bin/pip install -e .
+   pipx install --python python3.12 idp2aws
    ```
-
-3. Put `idp2aws` on your `PATH`:
-
-   ```sh
-   ln -s "$PWD/.venv/bin/idp2aws" ~/.local/bin/idp2aws
-   ```
-
-   If `~/.local/bin` is not on your `PATH`, add it in `~/.zshrc`.
 
 idp2aws finds Chrome in `/Applications` automatically.
 
 ### Linux
 
-These steps are for Debian and Ubuntu.
+These steps are for Debian 12, Ubuntu 24.04 and newer.
 
-1. Install Python and idp2aws:
+1. Install Python and pipx:
 
    ```sh
-   sudo apt install python3.12 python3.12-venv
-   git clone https://github.com/saimoncse19/idp2aws.git && cd idp2aws
-   python3.12 -m venv .venv
-   .venv/bin/pip install -e .
-   ln -s "$PWD/.venv/bin/idp2aws" ~/.local/bin/idp2aws
+   sudo apt install python3.12 python3.12-venv pipx
+   pipx ensurepath
    ```
 
-2. Install Google Chrome from google.com/chrome.
+2. Open a new terminal, then install idp2aws:
+
+   ```sh
+   pipx install --python python3.12 idp2aws
+   ```
+
+3. Install Google Chrome from google.com/chrome.
 
 To use Playwright's Chromium instead of Chrome, do these steps:
 
-1. Install Chromium and the system libraries that it needs:
+1. Install idp2aws with the `playwright` command, then install Chromium and the system libraries
+   that it needs:
 
    ```sh
-   .venv/bin/playwright install chromium
-   sudo "$PWD/.venv/bin/playwright" install-deps chromium
+   pipx install --python python3.12 --include-deps idp2aws
+   playwright install chromium
+   sudo "$(which playwright)" install-deps chromium
    ```
 
 2. Add `--browser chromium` when you run `idp2aws setup`.
 
-On Fedora, use `sudo dnf install python3.12` and the Chrome `.rpm`. Playwright `install-deps`
-supports only Debian and Ubuntu. So on Fedora, Chrome is the easier choice.
+On Fedora, use `sudo dnf install python3.12 pipx` and the Chrome `.rpm`. Playwright
+`install-deps` supports only Debian and Ubuntu. So on Fedora, Chrome is the easier choice.
 
 ### Windows
 
-1. In PowerShell, install Python and idp2aws:
+1. In PowerShell, install Python and pipx:
 
    ```powershell
    winget install Python.Python.3.12
-   git clone https://github.com/saimoncse19/idp2aws.git; cd idp2aws
-   py -3.12 -m venv .venv
-   .venv\Scripts\pip install -e .
+   py -3.12 -m pip install --user pipx
+   py -3.12 -m pipx ensurepath
    ```
 
-2. Add the `.venv\Scripts` folder in `idp2aws` to your `PATH`. Or, install with `pipx install .`
-   instead.
+2. Open a new PowerShell window, then install idp2aws:
+
+   ```powershell
+   pipx install idp2aws
+   ```
 
 Windows includes Edge. If you do not have Chrome, add `--browser msedge` when you run
 `idp2aws setup`.
@@ -98,6 +105,64 @@ idp2aws keeps its files in `%USERPROFILE%\.idp2aws` and `%USERPROFILE%\.aws\cred
 
 On Windows 11, WSL can show Linux windows on your desktop. So the Linux steps work in WSL.
 WSL on Windows 10 has no display. On Windows 10, install idp2aws on Windows.
+
+### Update or remove
+
+```sh
+pipx upgrade idp2aws
+pipx uninstall idp2aws
+```
+
+`pipx uninstall` does not delete `~/.idp2aws` or your keys in `~/.aws/credentials`.
+
+### Install from source
+
+To install the latest code on `main` without a copy of the repository, use pipx with the Git
+URL:
+
+```sh
+pipx install --python python3.12 git+https://github.com/saimoncse19/idp2aws.git
+```
+
+To change the code and use your changes at once, install from a clone. You need Python 3.12 or
+newer, as in the steps above.
+
+On macOS and Linux:
+
+1. Clone the repository and install idp2aws in a virtual environment:
+
+   ```sh
+   git clone https://github.com/saimoncse19/idp2aws.git && cd idp2aws
+   python3.12 -m venv .venv
+   .venv/bin/pip install -e .
+   ```
+
+2. Put `idp2aws` on your `PATH`:
+
+   ```sh
+   ln -s "$PWD/.venv/bin/idp2aws" ~/.local/bin/idp2aws
+   ```
+
+   If `~/.local/bin` is not on your `PATH`, add it in `~/.zshrc` or `~/.bashrc`.
+
+On Windows, in PowerShell:
+
+1. Clone the repository and install idp2aws in a virtual environment:
+
+   ```powershell
+   git clone https://github.com/saimoncse19/idp2aws.git; cd idp2aws
+   py -3.12 -m venv .venv
+   .venv\Scripts\pip install -e .
+   ```
+
+2. Add the `.venv\Scripts` folder in `idp2aws` to your `PATH`.
+
+With `-e`, idp2aws runs the code in the clone, so a change takes effect the next time you run
+it. To use Playwright's Chromium, run `.venv/bin/playwright install chromium` (on Windows,
+`.venv\Scripts\playwright install chromium`).
+
+To run the tests and lint, see Development in the
+[README](https://github.com/saimoncse19/idp2aws#development).
 
 ## Configure idp2aws
 
@@ -203,8 +268,8 @@ Linux keyring. On Linux without a keyring, Chrome uses a weaker fixed key.
 ## Troubleshooting
 
 **`idp2aws: command not found`**
-The command is in `.venv/bin` in the project. Link it into a folder on your `PATH`, as the
-install steps show. Or, activate the virtual environment.
+The folder where pipx puts commands is not on your `PATH`. Run `pipx ensurepath`, then open a new
+terminal.
 
 **Google says "This browser or app may not be secure".**
 Set `browser = "chrome"`, not `chromium`. If the message shows again, delete
