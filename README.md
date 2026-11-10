@@ -18,8 +18,29 @@ While your IdP session is active, the browser window opens and closes without in
 
 idp2aws does not work with AWS IAM Identity Center. For Identity Center, use `aws sso login`.
 
-For install steps on macOS, Linux and Windows, the config file and troubleshooting, see
-[docs/USAGE.md](docs/USAGE.md).
+## Install
+
+idp2aws needs Python 3.12 or newer, and Google Chrome or Microsoft Edge.
+
+Install from PyPI with pipx or pip:
+
+```sh
+pipx install idp2aws
+pip install idp2aws          # if you manage the virtual environment yourself
+```
+
+Or install from source:
+
+```sh
+pipx install git+https://github.com/saimoncse19/idp2aws.git    # latest code on main
+
+git clone https://github.com/saimoncse19/idp2aws.git && cd idp2aws   # to change the code
+python3.12 -m venv .venv
+.venv/bin/pip install -e .
+```
+
+For step-by-step install on macOS, Linux and Windows, the config file and troubleshooting, see
+[docs/USAGE.md](https://github.com/saimoncse19/idp2aws/blob/main/docs/USAGE.md).
 
 ## How it works
 
@@ -34,17 +55,34 @@ For install steps on macOS, Linux and Windows, the config file and troubleshooti
 ## Development
 
 ```sh
+git clone https://github.com/saimoncse19/idp2aws.git && cd idp2aws
 python3.12 -m venv .venv
 source .venv/bin/activate
 pip install -e '.[dev]'
 pytest                 # unit tests
 pytest -m browser      # browser tests: headless Chrome with a fake IdP and AWS role page
-pylint src
+pylint src scripts
 ```
+
+## Release
+
+idp2aws uses semantic versioning: `MAJOR.MINOR.PATCH`. Each release must be the next patch,
+minor or major version after the latest one on PyPI. After 1.4.2, the only choices are 1.4.3,
+1.5.0 and 2.0.0.
+
+1. Set `__version__` in `src/idp2aws/__init__.py`. This is the only place the version is set.
+2. Add the version and the date to `CHANGELOG.md`.
+3. Merge to `main`.
+4. On GitHub, create a release with the tag `v` plus the version, for example `v1.4.3`.
+
+The `Publish to PyPI` workflow then runs the tests, checks the version and uploads to PyPI. If
+the tag does not match `__version__`, or the version skips or repeats one, the workflow stops
+and uploads nothing. To check a version before you release, run
+`python scripts/check_version.py v1.4.3`.
 
 ## License
 
 idp2aws is source-available under the MIT license with the
 [Commons Clause](https://commonsclause.com/). You can use, change and share it for free,
 including at work. You cannot sell it, or sell a product or service whose value comes mainly
-from it. See [LICENSE](LICENSE).
+from it. See [LICENSE](https://github.com/saimoncse19/idp2aws/blob/main/LICENSE).

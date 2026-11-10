@@ -10,7 +10,7 @@ from typing import Annotated, NoReturn
 import typer
 from botocore.exceptions import ClientError
 
-from idp2aws import aws, browser, saml, settings
+from idp2aws import __version__, aws, browser, saml, settings
 
 app = typer.Typer(
     help="Get short-lived AWS keys. You sign in to your IdP in a browser.",
@@ -21,6 +21,29 @@ app = typer.Typer(
 ProfileArgument = Annotated[
     str, typer.Argument(help="AWS profile for the keys, for example dev.")
 ]
+
+
+def show_version(is_wanted: bool) -> None:
+    """Print the idp2aws version and stop, for ``--version``.
+
+    :param is_wanted: ``True`` when ``--version`` was given.
+    :raises typer.Exit: After printing the version.
+    """
+    if is_wanted:
+        typer.echo(f"idp2aws {__version__}")
+        raise typer.Exit()
+
+
+@app.callback()
+def main(
+    _version: Annotated[
+        bool,
+        typer.Option(
+            "--version", callback=show_version, is_eager=True, help="Show the version."
+        ),
+    ] = False,
+) -> None:
+    """Get short-lived AWS keys. You sign in to your IdP in a browser."""
 
 
 @app.command()

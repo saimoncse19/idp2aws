@@ -1,16 +1,32 @@
 [build-system]
-requires = ["hatchling"]
+requires = ["hatchling>=1.27"]
 build-backend = "hatchling.build"
 
 [project]
 name = "idp2aws"
-version = "0.2.0"
-description = "Get short-lived AWS keys by signing in to your IdP in a browser"
+dynamic = ["version"]
+description = "Get short-lived AWS keys by signing in to your SAML IdP in a real browser"
 readme = "README.md"
 license = "LicenseRef-MIT-Commons-Clause"
 license-files = ["LICENSE"]
 authors = [{ name = "Saimon" }]
 requires-python = ">=3.12"
+keywords = ["aws", "saml", "sso", "sts", "google-workspace", "okta", "entra-id", "cli"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Intended Audience :: System Administrators",
+    "Operating System :: MacOS",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Security",
+    "Topic :: System :: Systems Administration :: Authentication/Directory",
+    "Topic :: Utilities",
+]
 dependencies = [
     "typer>=0.12",
     "boto3>=1.34",
@@ -18,16 +34,29 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["pytest>=8", "pytest-mock>=3", "pylint>=3"]
+dev = ["pytest>=8", "pytest-mock>=3", "pylint>=3", "build>=1", "twine>=5"]
+
+[project.urls]
+Homepage = "https://github.com/saimoncse19/idp2aws"
+Documentation = "https://github.com/saimoncse19/idp2aws/blob/main/docs/USAGE.md"
+Issues = "https://github.com/saimoncse19/idp2aws/issues"
+Changelog = "https://github.com/saimoncse19/idp2aws/blob/main/CHANGELOG.md"
 
 [project.scripts]
 idp2aws = "idp2aws.cli:app"
 
+[tool.hatch.version]
+path = "src/idp2aws/__init__.py"
+
 [tool.hatch.build.targets.wheel]
 packages = ["src/idp2aws"]
 
+[tool.hatch.build.targets.sdist]
+include = ["src", "scripts", "tests", "docs", "README.md", "CHANGELOG.md", "LICENSE"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+pythonpath = ["scripts"]
 addopts = "-m 'not browser'"
 markers = ["browser: starts a real browser (run with: pytest -m browser)"]
 
